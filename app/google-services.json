@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "634858665574",
+    "firebase_url": "https://agri-products-eec4b.firebaseio.com",
+    "project_id": "agri-products-eec4b",
+    "storage_bucket": "agri-products-eec4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634858665574:android:dc724cb0e7f50155365fa7",
+        "android_client_info": {
+          "package_name": "com.ugtechie.agribuyer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634858665574-7o8ulnfkg2enl4mn91fvonrbtecvima9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ugtechie.agribuyer",
+            "certificate_hash": "1c0b28c6b7eb4fc9e99b870848787dd8b0a37897"
+          }
+        },
+        {
+          "client_id": "634858665574-psvj8i3k6tf6ujlcetrsib010lh4i6e7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ2lSrydEYWjZNK4A4YxxI3Pv8bLWm-ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634858665574-psvj8i3k6tf6ujlcetrsib010lh4i6e7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634858665574:android:cdad8d38092b1c15365fa7",
+        "android_client_info": {
+          "package_name": "com.ugtechie.agrisell"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634858665574-7njfi27votqjqsh5469d0tqpdnfajl5p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ugtechie.agrisell",
+            "certificate_hash": "1c0b28c6b7eb4fc9e99b870848787dd8b0a37897"
+          }
+        },
+        {
+          "client_id": "634858665574-psvj8i3k6tf6ujlcetrsib010lh4i6e7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ2lSrydEYWjZNK4A4YxxI3Pv8bLWm-ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634858665574-psvj8i3k6tf6ujlcetrsib010lh4i6e7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
