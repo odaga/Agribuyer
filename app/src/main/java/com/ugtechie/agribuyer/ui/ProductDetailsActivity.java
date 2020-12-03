@@ -16,14 +16,25 @@ import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.ugtechie.agribuyer.R;
+import com.ugtechie.agribuyer.api.ProductService;
 import com.ugtechie.agribuyer.models.CartProduct;
 import com.ugtechie.agribuyer.models.Product;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.ugtechie.agribuyer.ui.ProductCategory1Activity.SINGLE_PRODUCT_RECYCLERVIEW_ID;
 
@@ -36,9 +47,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private String productDetailsId;
 
-    //Initializing firestore
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference productRef = db.collection("Submitted Products");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         productPrice = findViewById(R.id.product_details_price);
         Button addToCartButton = findViewById(R.id.add_to_cart_button);
 
+
         //Add click listener on cart button
         addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,49 +81,88 @@ public class ProductDetailsActivity extends AppCompatActivity {
         //Getting data from the intent sent from the product category activity
         Intent intent = getIntent();
         String productDetailsId = intent.getStringExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID);
-        getProductDetails(productDetailsId);
-        
+        //  getProductDetails(productDetailsId);
+
+        getProduct(productDetailsId);
+
     }
 
+    private void getProduct(String productDetailsId) {
+        //Call the product from the api
+        //SETTING UP RETROFIT
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ProductService productService = retrofit.create(ProductService.class);
+        Call<Product> call = productService.getSingleProduct(productDetailsId);
 
-    private void getProductDetails(final String productDetailsId) {
-        DocumentReference DocRef = productRef.document(productDetailsId);
-        DocRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        Product productDetail = documentSnapshot.toObject(Product.class);
-                        //Updating ui with data from the FireStore
-                        productName.setText(productDetail.getProductName());
-                        productPrice.setText("UGX " + productDetail.getProductPrice());
-                        productDescription.setText(productDetail.getProductDescription());
-                        Uri imageLink = Uri.parse(productDetail.getProductImageUrl());
-                        Picasso.get()
-                                .load(imageLink)
-                                .into(productDetailsImage);
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                progressBar.setVisibility(View.INVISIBLE);
+                if (!response.isSuccessful()) {
+                    Toast.makeText(ProductDetailsActivity.this, "Error fetching product code: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
 
-                        progressBar.setVisibility(View.INVISIBLE);
-                        /*======================= ADD THE TWEAK THE UI ON THE PRODUCT DETAILS ACTIVITY TO SHOW THE DATA NICELY ===========================*/
+                //setting up the thousand number format for prices
+                DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 
+                //update the ui with data from the api
+                productName.setText(response.body().getName());
+                productPrice.setText("UGX" + decimalFormat.format(Integer.parseInt(response.body().getPrice())));
+                productDescription.setText(response.body().getDescription());
+                if (response.body().getProductImage() == null) {
+                    productDetailsImage.setImageResource(R.drawable.app_background);
+                } else {
+                    Picasso.get().load(response.body().getProductImage())
+                            .into(productDetailsImage);
+                }
+            }
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProductDetailsActivity.this, "Failed to fetch product details", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(ProductDetailsActivity.this, "Failed to fetch product details", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
     private void addProductToCart() {
-        DocumentReference userCartRef = db.collection("Users").document("Cart");
-        //Creating an instance of CartProduct (Product to be added to cart)
-        CartProduct cartProduct = new CartProduct(
 
+        CartProduct cartItem = new CartProduct(
+                "",
+                getIntent().getStringExtra("product_name"),
+                getIntent().getStringExtra("product_price"),
+                getIntent().getStringExtra("product_category"),
+                "",                             //will be updated when the plus is implemented on each cart item
+                getIntent().getStringExtra("ownerId"),
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
         );
+
+        //SETTING UP RETROFIT
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ProductService productService = retrofit.create(ProductService.class);
+        Call<CartProduct> call = productService.addToCart(cartItem);
+        call.enqueue(new Callback<CartProduct>() {
+            @Override
+            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(ProductDetailsActivity.this, "Could not add product to cart code: " +response.code(), Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(ProductDetailsActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<CartProduct> call, Throwable t) {
+                Toast.makeText(ProductDetailsActivity.this, "Operation failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
-}
+} 

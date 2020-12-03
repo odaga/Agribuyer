@@ -22,14 +22,12 @@ import com.ugtechie.agribuyer.R;
 public class WalletFragment extends Fragment {
     private static final String TAG = "WalletFragment";
 
-    private Toolbar mActionBarToolbar;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_wallet, container, false);
         //Initializing the toolbar
-        mActionBarToolbar = v.findViewById(R.id.toolbar);
+        Toolbar mActionBarToolbar = v.findViewById(R.id.toolbar);
         mActionBarToolbar.setTitle("My Wallet");
         
         return v;

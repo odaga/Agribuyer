@@ -1,6 +1,7 @@
 package com.ugtechie.agribuyer.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,14 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 import com.ugtechie.agribuyer.R;
 import com.ugtechie.agribuyer.models.User;
 import com.ugtechie.agribuyer.ui.ProductCategory1Activity;
@@ -28,7 +31,8 @@ public class HomeFragment extends Fragment {
 
     private TextView textViewHomeUserName;
     private ImageView imageViewNotificationBell, userProfilePicture;
-    private CardView cardViewCat1, cardViewCat2, cardViewCat3, cardViewCat4;
+    private CardView cardViewCat1, cardViewCat2, cardViewCat3;
+    private LoaderImageView homeBannerImage, categoryOneImage, categoryTwoImage, categoryThreeImage;
 
 
     @Nullable
@@ -42,8 +46,18 @@ public class HomeFragment extends Fragment {
         cardViewCat1 = v.findViewById(R.id.card_view_category_one);
         cardViewCat2 = v.findViewById(R.id.card_view_category_two);
         cardViewCat3 = v.findViewById(R.id.card_view_category_three);
-        cardViewCat4 = v.findViewById(R.id.card_view_category_four);
         final TextView cat1Text = v.findViewById(R.id.cat1_text);
+        homeBannerImage = v.findViewById(R.id.home_banner_image);
+        categoryOneImage = v.findViewById(R.id.product_category_one_image);
+        categoryTwoImage = v.findViewById(R.id.product_category_two_image);
+        categoryThreeImage = v.findViewById(R.id.product_category_three_image);
+
+        //load home activity images
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffresh%20vegetables.jpg?alt=media&token=243ced8c-c209-4096-8c27-e11360cef8b7")).into(homeBannerImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fanimal%20products.jpg?alt=media&token=d53917df-ced5-48d0-97cd-ffa9391d578e")).into(categoryOneImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fvegetables.jpg?alt=media&token=de236cf3-876e-4249-90b9-fb5dee10a6ff")).into(categoryTwoImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffruits%20category.jpg?alt=media&token=d4bbfddb-dd8f-426f-95d8-fb306932f772")).into(categoryThreeImage);
+
 
         //Update user info on the home fragment
         updateUserInfo();
@@ -52,28 +66,16 @@ public class HomeFragment extends Fragment {
         cardViewCat1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*
-                ProductsFragment productsFragment = new ProductsFragment();
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, productsFragment, "productsFragment")
-                        .addToBackStack(null)
-                        .commit();
-
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProductsFragment()).commit();
-                */
-                //cat1Text.setText("Category one card");
-                Intent intent = new Intent(getActivity(), ProductCategory1Activity.class);
+                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
                 startActivity(intent);
-
-
             }
         });
 
         cardViewCat1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                startActivity(intent);
 
             }
         });
@@ -81,84 +83,24 @@ public class HomeFragment extends Fragment {
         cardViewCat2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                startActivity(intent);
             }
         });
 
         cardViewCat3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                startActivity(intent);
             }
         });
 
-        cardViewCat4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return v;
     }
 
     private void updateUserInfo() {
-        //Initialize firebase FireStore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference users = db.collection("Users");
-        /*
-        try {
-            users.whereEqualTo("userId", FirebaseAuth.getInstance().getCurrentUser()).get()
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Failed to load user data", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    User userProfile = (User) document.getData();
-
-                                    textViewHomeUserName.setText("Hello, " + userProfile.getFirstName());
-                                }
-                            }
-                        }
-                    });
-        }
-        catch (Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        */
-        try {
-            //Get the user Document reference from the sign up activity
-            String userDocId = getArguments().getString("UserDocumentID");
-
-            users.document(userDocId).get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            User user = new User();
-                            user = documentSnapshot.toObject(User.class);
-
-                            //Update UI with user info
-                            //textViewHomeUserName.setText(user.getFirstName());
-                            textViewHomeUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Failed to get User info", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        }
-        catch(Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
+        //show user profile information like username and profile picture
     }
 }

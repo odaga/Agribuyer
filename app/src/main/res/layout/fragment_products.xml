@@ -12,11 +12,16 @@
         android:id="@+id/product_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingRight="10dp"
         android:layout_below="@id/toolbar"
+        android:paddingRight="10dp"
         android:scrollbars="vertical"
-        android:scrollingCache="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:scrollingCache="true" />
+
+    <ProgressBar
+        android:id="@+id/products_progressbar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true" />
 
 
 </RelativeLayout>

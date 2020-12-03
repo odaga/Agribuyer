@@ -18,7 +18,7 @@ import com.ugtechie.agribuyer.R;
 import com.ugtechie.agribuyer.models.Product;
 
 public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAdapter.ProductViewHolder> {
-    private  OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public ProductAdapter(@NonNull FirestoreRecyclerOptions<Product> options) {
         super(options);
@@ -26,24 +26,23 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
     @Override
     protected void onBindViewHolder(@NonNull ProductViewHolder holder, int position, @NonNull Product model) {
-        //holder.textViewFarmTitle.setText(model.getFarmName());
-        holder.productName.setText(model.getProductName());
-        holder.productPrice.setText("UGX " + model.getProductPrice());
-        String imageUrl = model.getProductImageUrl();
+        holder.productName.setText(model.getName());
+        holder.productPrice.setText("UGX " + model.getPrice());
+        String imageUrl = model.getProductImage();
 
         //Image needs to be fetched using Picasso image loader
         Picasso.get()
                 .load(imageUrl)
-               // .resize(150, 150)  //Sets image to a standard dimension 150px *150px
+                // .resize(150, 150)  //Sets image to a standard dimension 150px *150px
                 .into(holder.productImage);
     }
 
     @NonNull
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.single_product_card, parent,false);
-       return new ProductViewHolder(v);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.single_product_card, parent, false);
+        return new ProductViewHolder(v);
     }
 
     class ProductViewHolder extends RecyclerView.ViewHolder {
@@ -71,8 +70,8 @@ public class ProductAdapter extends FirestoreRecyclerAdapter<Product, ProductAda
 
     }
 
-    public interface  OnItemClickListener {
-        void  onItemClick(DocumentSnapshot documentSnapshot, int position);
+    public interface OnItemClickListener {
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

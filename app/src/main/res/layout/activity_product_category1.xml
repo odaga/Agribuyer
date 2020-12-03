@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ProductCategory1Activity">
+    tools:context=".ui.ProductCategory1Activity"
+    android:id="@+id/product_category_relativelayout">
 
     <include
         android:id="@+id/toolbar"
@@ -14,5 +15,11 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:id="@+id/product_category_recyclerview"/>
+
+    <ProgressBar
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:id="@+id/category1_progressbar"/>
 
 </RelativeLayout>

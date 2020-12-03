@@ -22,8 +22,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.ugtechie.agribuyer.R;
+import com.ugtechie.agribuyer.api.ProductService;
+import com.ugtechie.agribuyer.api.UserService;
 import com.ugtechie.agribuyer.fragments.HomeFragment;
+import com.ugtechie.agribuyer.models.Product;
 import com.ugtechie.agribuyer.models.User;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
@@ -34,7 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText editTextLastName;
     private EditText editTextPhoneNumber;
     private EditText editTextEmail;
-    private  EditText editTextPassword;
+    private EditText editTextPassword;
     private String userId;
     private String userDocumentId;
 
@@ -45,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         //initializing Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
 
         //Setting Up widgets
         buttonRegister = findViewById(R.id.button_register);
@@ -76,15 +86,12 @@ public class SignUpActivity extends AppCompatActivity {
         if (firstName.isEmpty()) {
             //Toast.makeText(this, "Please enter First name", Toast.LENGTH_SHORT).show();
             editTextFirstName.setError("First name is required");
-        }
-        else if (lastName.isEmpty()) {
+        } else if (lastName.isEmpty()) {
             // Toast.makeText(this, "Please enter Last name", Toast.LENGTH_SHORT).show();
             editTextLastName.setError("Last name is required");
-        }
-        else if(phoneNumber.isEmpty()) {
+        } else if (phoneNumber.isEmpty()) {
             editTextPhoneNumber.setError("Valid Phone Number is required");
-        }
-        else if (email.isEmpty()) {
+        } else if (email.isEmpty()) {
             //Toast.makeText(this, "An email is required", Toast.LENGTH_SHORT).show();
             editTextEmail.setError("Email is required");
         } else if (password.isEmpty()) {
@@ -107,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            progressDialog.dismiss();
+                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 //Sign in success
                                 Log.d(TAG, "onComplete: createUSerWith Email successful");
@@ -115,10 +122,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 userId = mAuth.getCurrentUser().getUid();
 
                                 //Add profile data to FireStore users collection
-                                CreateUserProfile(userId,firstName, lastName, email, phoneNumber);
+                                CreateUserProfile(userId, firstName, lastName, email, phoneNumber);
 
                                 //Go to home activity
-                                startHomeActivity(user);
+                                startHomeActivity();
                             } else {
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                 Toast.makeText(SignUpActivity.this, "Creating Account failed", Toast.LENGTH_SHORT).show();
@@ -130,21 +137,19 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void startHomeActivity(FirebaseUser user) {
+    private void startHomeActivity() {
 
-        if (user != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             Intent intent = new Intent(this, HomeActivity.class);
             //Intent intent = new Intent(this, UploadProfileImageActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("UserDocumentId", userDocumentId);
             startActivity(intent);
             finish();
         }
     }
 
     //Save user data to firebase fireStore users collection
-     private void CreateUserProfile(String userId, String firstName, String lastName, String email, String phoneNumber) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private void CreateUserProfile(String userId, String firstName, String lastName, String email, String phoneNumber) {
         //Get an instance of the user object
         User newUser = new User(
                 userId,
@@ -154,72 +159,31 @@ public class SignUpActivity extends AppCompatActivity {
                 phoneNumber,
                 ""  //To be added after an profile image is uploaded and url is retrieved
         );
-        //Add the new user object to firebase users collection
-        db.collection("users")
-                .add(newUser)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "New user added with ID:  "+ documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding user", e);
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        try {
-                             userDocumentId = task.getResult().getId();
-                             //Send the user document id to the home fragment
-                            Bundle bundle = new Bundle();
-                            bundle.putString("UserDocumentID", userDocumentId);
-                            HomeFragment homeFragment = new HomeFragment();
-                            homeFragment.setArguments(bundle);
+        //SETTING UP RETROFIT
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserService userService = retrofit.create(UserService.class);
 
-                        }
-                        catch (Exception e) {
-                            Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        Call<User> call = userService.saveProfile(newUser);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful())
+                    Log.d(TAG, "onResponse: failed to save profile");
+                //Go to home activity
+                startHomeActivity();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.d(TAG, "onFailure: saving buyer profile failed");
+                Toast.makeText(SignUpActivity.this, "saving buyer profile failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-
-     /*
-    //Save user data to the firebase realtime database
-    private void saveUser(String firstName, String lastName, String email, String phoneNumber) {
-        //Get an instance of the user object
-        User newUser = new User(
-                firstName,
-                lastName,
-                email,
-                phoneNumber
-        );
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(
-                FirebaseAuth.getInstance().getCurrentUser().getUid()
-        );
-        reference.setValue(newUser).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Log.e("Sign up status","Successful");
-                            startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
-                            finish();
-                        }
-                        else {
-                            Log.e("Sign up status","Unsuccessful");
-                            Toast.makeText(SignUpActivity.this, "Could not sign up\nPlease try again later",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-        );
-    }
-    */
 
 }

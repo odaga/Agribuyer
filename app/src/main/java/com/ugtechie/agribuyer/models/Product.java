@@ -1,47 +1,59 @@
 package com.ugtechie.agribuyer.models;
 
 
-
 public class Product {
-    private String productName;
-    private String productDescription;
+    private String _id;
+    private String name;
+    private String description;
+    private String price;
     private String productCategory;
-    private String productImageUrl;
-    private String productPrice;
-    private String productOwnerId;
-    private Boolean productApprovalStatus;
-    private String productBuyerId;
+    private String productImage;
+    private String OwnerId;
+    private Boolean approvalStatus;
+    private String BuyerId;
 
     public Product() {
         //needed by Firebase to sterilize data
     }
 
-    public Product(String productName, String productDescription, String productCategory, String productImageUrl, String productPrice, String productOwnerId, Boolean productApprovalStatus, String productBuyerId) {
-        this.productName = productName;
-        this.productDescription = productDescription;
+    public Product(String _id, String name, String description, String price, String productCategory, String productImage, String ownerId, Boolean approvalStatus, String buyerId) {
+        this._id = _id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
         this.productCategory = productCategory;
-        this.productImageUrl = productImageUrl;
-        this.productPrice = productPrice;
-        this.productOwnerId = productOwnerId;
-        this.productApprovalStatus = productApprovalStatus;
-        this.productBuyerId = productBuyerId;
+        this.productImage = productImage;
+        OwnerId = ownerId;
+        this.approvalStatus = approvalStatus;
+        BuyerId = buyerId;
     }
 
-
-    public String getProductName() {
-        return productName;
+    public String get_id() {
+        return _id;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public String getName() {
+        return name;
     }
 
-    public String getProductDescription() {
-        return productDescription;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getProductCategory() {
@@ -52,43 +64,35 @@ public class Product {
         this.productCategory = productCategory;
     }
 
-    public String getProductImageUrl() {
-        return productImageUrl;
+    public String getProductImage() {
+        return productImage;
     }
 
-    public void setProductImageUrl(String productImageUrl) {
-        this.productImageUrl = productImageUrl;
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 
-    public String getProductPrice() {
-        return productPrice;
+    public String getOwnerId() {
+        return OwnerId;
     }
 
-    public void setProductPrice(String productPrice) {
-        this.productPrice = productPrice;
+    public void setOwnerId(String ownerId) {
+        OwnerId = ownerId;
     }
 
-    public String getProductOwnerId() {
-        return productOwnerId;
+    public Boolean getApprovalStatus() {
+        return approvalStatus;
     }
 
-    public void setProductOwnerId(String productOwnerId) {
-        this.productOwnerId = productOwnerId;
+    public void setApprovalStatus(Boolean approvalStatus) {
+        this.approvalStatus = approvalStatus;
     }
 
-    public Boolean getProductApprovalStatus() {
-        return productApprovalStatus;
+    public String getBuyerId() {
+        return BuyerId;
     }
 
-    public void setProductApprovalStatus(Boolean productApprovalStatus) {
-        this.productApprovalStatus = productApprovalStatus;
-    }
-
-    public String getProductBuyerId() {
-        return productBuyerId;
-    }
-
-    public void setProductBuyerId(String productBuyerId) {
-        this.productBuyerId = productBuyerId;
+    public void setBuyerId(String buyerId) {
+        BuyerId = buyerId;
     }
 }
