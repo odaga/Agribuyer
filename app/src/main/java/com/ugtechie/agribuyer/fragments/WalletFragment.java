@@ -1,9 +1,11 @@
 package com.ugtechie.agribuyer.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,9 +20,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.ugtechie.agribuyer.R;
+import com.ugtechie.agribuyer.ui.TopUpActivity;
 
 public class WalletFragment extends Fragment {
     private static final String TAG = "WalletFragment";
+
+    private Button topUpButton;
 
     @Nullable
     @Override
@@ -29,7 +34,17 @@ public class WalletFragment extends Fragment {
         //Initializing the toolbar
         Toolbar mActionBarToolbar = v.findViewById(R.id.toolbar);
         mActionBarToolbar.setTitle("My Wallet");
-        
+
+        topUpButton = v.findViewById(R.id.button_wallet_top_up);
+
+        topUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), TopUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return v;
     }
 }

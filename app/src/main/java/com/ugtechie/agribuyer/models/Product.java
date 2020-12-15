@@ -8,9 +8,9 @@ public class Product {
     private String price;
     private String productCategory;
     private String productImage;
-    private String OwnerId;
+    private String ownerId;
     private Boolean approvalStatus;
-    private String BuyerId;
+    private String buyerId;
 
     public Product() {
         //needed by Firebase to sterilize data
@@ -23,9 +23,9 @@ public class Product {
         this.price = price;
         this.productCategory = productCategory;
         this.productImage = productImage;
-        OwnerId = ownerId;
+        this.ownerId = ownerId;
         this.approvalStatus = approvalStatus;
-        BuyerId = buyerId;
+        this.buyerId = buyerId;
     }
 
     public String get_id() {
@@ -73,11 +73,11 @@ public class Product {
     }
 
     public String getOwnerId() {
-        return OwnerId;
+        return ownerId;
     }
 
     public void setOwnerId(String ownerId) {
-        OwnerId = ownerId;
+        this.ownerId = ownerId;
     }
 
     public Boolean getApprovalStatus() {
@@ -89,10 +89,10 @@ public class Product {
     }
 
     public String getBuyerId() {
-        return BuyerId;
+        return buyerId;
     }
 
     public void setBuyerId(String buyerId) {
-        BuyerId = buyerId;
+        this.buyerId = buyerId;
     }
 }

@@ -9,12 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.UploadProfileImageActivity"></activity>
+        <activity android:name=".ui.TopUpActivity"></activity>
+        <activity android:name=".ui.UploadProfileImageActivity" />
         <activity
             android:name=".ui.FabActivity"
             android:label="@string/title_activity_fab"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.ProductCategory1Activity" />
+        <activity android:name=".ui.ProductCategoryActivity" />
         <activity android:name=".ui.ProductDetailsActivity" />
         <activity android:name=".ui.SignUpActivity" />
         <activity android:name=".ui.HomeActivity" />

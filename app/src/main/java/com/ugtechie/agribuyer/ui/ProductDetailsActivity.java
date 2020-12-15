@@ -1,34 +1,26 @@
 package com.ugtechie.agribuyer.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
 import com.elyeproj.loaderviewlibrary.LoaderTextView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.ugtechie.agribuyer.R;
 import com.ugtechie.agribuyer.api.ProductService;
-import com.ugtechie.agribuyer.models.CartProduct;
+import com.ugtechie.agribuyer.fragments.CartFragment;
+import com.ugtechie.agribuyer.fragments.HomeFragment;
 import com.ugtechie.agribuyer.models.Product;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,12 +28,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.ugtechie.agribuyer.ui.ProductCategory1Activity.SINGLE_PRODUCT_RECYCLERVIEW_ID;
+import static com.ugtechie.agribuyer.ui.ProductCategoryActivity.SINGLE_PRODUCT_RECYCLERVIEW_ID;
 
 public class ProductDetailsActivity extends AppCompatActivity {
     private static final String TAG = "ProductDetailsActivity";
 
-    private Toolbar mActionBarToolbar;
     private LoaderImageView productDetailsImage;
     private LoaderTextView productName, productDescription, productPrice;
     private ProgressBar progressBar;
@@ -54,7 +45,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_details);
 
         //Setting the toolbar with title
-        mActionBarToolbar = findViewById(R.id.toolbar);
+        Toolbar mActionBarToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -74,15 +65,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Add product to buyer's cart cart
                 addProductToCart();
-                Toast.makeText(ProductDetailsActivity.this, "Add product to Cart", Toast.LENGTH_SHORT).show();
             }
         });
         progressBar = findViewById(R.id.progressBar);
         //Getting data from the intent sent from the product category activity
         Intent intent = getIntent();
         String productDetailsId = intent.getStringExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID);
-        //  getProductDetails(productDetailsId);
-
         getProduct(productDetailsId);
 
     }
@@ -108,9 +96,10 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 //setting up the thousand number format for prices
                 DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 
+
                 //update the ui with data from the api
                 productName.setText(response.body().getName());
-                productPrice.setText("UGX" + decimalFormat.format(Integer.parseInt(response.body().getPrice())));
+                productPrice.setText("UGX" + response.body().getPrice());
                 productDescription.setText(response.body().getDescription());
                 if (response.body().getProductImage() == null) {
                     productDetailsImage.setImageResource(R.drawable.app_background);
@@ -131,15 +120,21 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     private void addProductToCart() {
 
-        CartProduct cartItem = new CartProduct(
+        Product cartItem = new Product(
                 "",
                 getIntent().getStringExtra("product_name"),
+                getIntent().getStringExtra("product_description"),
                 getIntent().getStringExtra("product_price"),
                 getIntent().getStringExtra("product_category"),
-                "",                             //will be updated when the plus is implemented on each cart item
-                getIntent().getStringExtra("ownerId"),
+                getIntent().getStringExtra("product_image"),
+                getIntent().getStringExtra("ownerId"),   //will be updated when the plus is implemented on each cart item
+                false,
                 FirebaseAuth.getInstance().getCurrentUser().getUid()
         );
+
+
+        //Toast.makeText(ProductDetailsActivity.this, cartItem.getBuyerId(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductDetailsActivity.this, getIntent().getStringExtra("ownerId"), Toast.LENGTH_SHORT).show();
 
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
@@ -147,21 +142,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
-        Call<CartProduct> call = productService.addToCart(cartItem);
-        call.enqueue(new Callback<CartProduct>() {
+        Call<Product> call = productService.addToCart(cartItem);
+
+        call.enqueue(new Callback<Product>() {
             @Override
-            public void onResponse(Call<CartProduct> call, Response<CartProduct> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(ProductDetailsActivity.this, "Could not add product to cart code: " +response.code(), Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (!response.isSuccessful())
+                    Toast.makeText(ProductDetailsActivity.this, "Request failed with code:" + response.code(), Toast.LENGTH_SHORT).show();
+                else {
+                    //show success message and open cart fragment
+                    Toast.makeText(ProductDetailsActivity.this, "Product Added to Cart", Toast.LENGTH_SHORT).show();
+                    //StartCartFragment
+
                 }
-                Toast.makeText(ProductDetailsActivity.this, "Product added to cart", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<CartProduct> call, Throwable t) {
-                Toast.makeText(ProductDetailsActivity.this, "Operation failed", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<Product> call, Throwable t) {
+                Toast.makeText(ProductDetailsActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
 

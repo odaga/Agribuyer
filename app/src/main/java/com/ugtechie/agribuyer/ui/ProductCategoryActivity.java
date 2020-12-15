@@ -3,6 +3,7 @@ package com.ugtechie.agribuyer.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -30,26 +31,28 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ProductCategory1Activity extends AppCompatActivity {
-    private static final String TAG = "ProductCategory1Activity";
+public class ProductCategoryActivity extends AppCompatActivity {
+    private static final String TAG = "ProductCategoryActivity";
     public static final String SINGLE_PRODUCT_RECYCLERVIEW_ID = "com.ugtechie.fragments.extra";
     private RelativeLayout categoryOneActivityRelativeLayout;
+    private ProgressBar productCategoryProgressBar;
 
     ProductAdapter productAdapter;
-    //Initializing fireStore
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference productRef = db.collection("Submitted Products");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_category1);
+        setContentView(R.layout.activity_product_category);
         categoryOneActivityRelativeLayout = findViewById(R.id.product_category_relativelayout);
+
+
+        productCategoryProgressBar = findViewById(R.id.category_progressbar);
 
         //Setting the toolbar with title and widgets
         Toolbar mActionBarToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
-        getSupportActionBar().setTitle("Product Category");
+        getSupportActionBar().setTitle(getIntent().getStringExtra("product_category"));
 
         //getProductsFromFirebase();
         getProductsFromServer();
@@ -57,6 +60,7 @@ public class ProductCategory1Activity extends AppCompatActivity {
     }
 
     private void getProductsFromServer() {
+        productCategoryProgressBar.setVisibility(View.VISIBLE);
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
@@ -68,22 +72,23 @@ public class ProductCategory1Activity extends AppCompatActivity {
         call.enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
-                if(!response.isSuccessful()) {
-                    Toast.makeText(ProductCategory1Activity.this, "Failed with code: " +response.code(), Toast.LENGTH_SHORT).show();
-                }
-                else {
+                productCategoryProgressBar.setVisibility(View.INVISIBLE);
+                if (!response.isSuccessful()) {
+                    Toast.makeText(ProductCategoryActivity.this, "Failed with code: " + response.code(), Toast.LENGTH_SHORT).show();
+                } else {
                     List<Product> productList = response.body();
                     buildRecyclerview(productList);
+                    productCategoryProgressBar.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 //Dismiss progress widget when the fetching products fails
-                //productsFetchingProgress.setVisibility(View.INVISIBLE);
+                productCategoryProgressBar.setVisibility(View.INVISIBLE);
 
                 Snackbar snackbar = Snackbar
-                        .make(categoryOneActivityRelativeLayout, "Could not fetch products",Snackbar.LENGTH_INDEFINITE)
+                        .make(categoryOneActivityRelativeLayout, "Could not fetch products", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Retry", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -105,9 +110,10 @@ public class ProductCategory1Activity extends AppCompatActivity {
         adapter.setOnClickListener(new ProductsApiAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-               Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
-               startActivity(intent);
-                Toast.makeText(ProductCategory1Activity.this, "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), ProductDetailsActivity.class);
+                intent.putExtra("SINGLE_PRODUCT_RECYCLERVIEW_ID", productList.get(position).get_id());
+                startActivity(intent);
+                Toast.makeText(ProductCategoryActivity.this, "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -117,8 +123,8 @@ public class ProductCategory1Activity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 productList.get(position);
-                Intent intent = new Intent(ProductCategory1Activity.this, ProductDetailsActivity.class);
-                intent.putExtra("product_id", productList.get(position).get_id());
+                Intent intent = new Intent(ProductCategoryActivity.this, ProductDetailsActivity.class);
+                intent.putExtra("SINGLE_PRODUCT_RECYCLERVIEW_ID", productList.get(position).get_id());
                 startActivity(intent);
             }
         });

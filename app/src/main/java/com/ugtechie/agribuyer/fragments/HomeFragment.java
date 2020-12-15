@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,23 +15,14 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 import com.ugtechie.agribuyer.R;
-import com.ugtechie.agribuyer.models.User;
-import com.ugtechie.agribuyer.ui.ProductCategory1Activity;
+import com.ugtechie.agribuyer.ui.ProductCategoryActivity;
 
 public class HomeFragment extends Fragment {
 
     private TextView textViewHomeUserName;
     private ImageView imageViewNotificationBell, userProfilePicture;
-    private CardView cardViewCat1, cardViewCat2, cardViewCat3;
-    private LoaderImageView homeBannerImage, categoryOneImage, categoryTwoImage, categoryThreeImage;
 
 
     @Nullable
@@ -43,20 +33,20 @@ public class HomeFragment extends Fragment {
         textViewHomeUserName = v.findViewById(R.id.text_view_user_name);
         imageViewNotificationBell = v.findViewById(R.id.image_view_notification_bell);
         userProfilePicture = v.findViewById(R.id.profile_image);
-        cardViewCat1 = v.findViewById(R.id.card_view_category_one);
-        cardViewCat2 = v.findViewById(R.id.card_view_category_two);
-        cardViewCat3 = v.findViewById(R.id.card_view_category_three);
+        CardView cardViewCat1 = v.findViewById(R.id.card_view_category_one);
+        CardView cardViewCat2 = v.findViewById(R.id.card_view_category_two);
+        CardView cardViewCat3 = v.findViewById(R.id.card_view_category_three);
         final TextView cat1Text = v.findViewById(R.id.cat1_text);
-        homeBannerImage = v.findViewById(R.id.home_banner_image);
-        categoryOneImage = v.findViewById(R.id.product_category_one_image);
-        categoryTwoImage = v.findViewById(R.id.product_category_two_image);
-        categoryThreeImage = v.findViewById(R.id.product_category_three_image);
+        LoaderImageView homeBannerImage = v.findViewById(R.id.home_banner_image);
+        LoaderImageView categoryOneImage = v.findViewById(R.id.product_category_one_image);
+        LoaderImageView categoryTwoImage = v.findViewById(R.id.product_category_two_image);
+        LoaderImageView categoryThreeImage = v.findViewById(R.id.product_category_three_image);
 
         //load home activity images
         Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffresh%20vegetables.jpg?alt=media&token=243ced8c-c209-4096-8c27-e11360cef8b7")).into(homeBannerImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fanimal%20products.jpg?alt=media&token=d53917df-ced5-48d0-97cd-ffa9391d578e")).into(categoryOneImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fvegetables.jpg?alt=media&token=de236cf3-876e-4249-90b9-fb5dee10a6ff")).into(categoryTwoImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffruits%20category.jpg?alt=media&token=d4bbfddb-dd8f-426f-95d8-fb306932f772")).into(categoryThreeImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fuganda-coffe-plantation.jpg?alt=media&token=b934b5d5-5100-4ff0-8f94-b8afbfabdf5b")).into(categoryOneImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fpng-maize.png?alt=media&token=9dfef1b1-3a3b-4c16-a7b3-a960074debba")).into(categoryTwoImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fpotatoes.webp?alt=media&token=386b7040-a0d1-47b3-bf0c-33ba1cb96e32")).into(categoryThreeImage);
 
 
         //Update user info on the home fragment
@@ -66,7 +56,8 @@ public class HomeFragment extends Fragment {
         cardViewCat1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
+                intent.putExtra("product_category", "Coffee Products");
                 startActivity(intent);
             }
         });
@@ -74,7 +65,8 @@ public class HomeFragment extends Fragment {
         cardViewCat1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
+                intent.putExtra("product_category", "Coffee Products");
                 startActivity(intent);
 
             }
@@ -83,7 +75,8 @@ public class HomeFragment extends Fragment {
         cardViewCat2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
+                intent.putExtra("product_category", "Maize Products");
                 startActivity(intent);
             }
         });
@@ -91,7 +84,8 @@ public class HomeFragment extends Fragment {
         cardViewCat3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProductCategory1Activity.class);
+                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
+                intent.putExtra("product_category", "Irish Potatoes");
                 startActivity(intent);
             }
         });

@@ -44,7 +44,6 @@ public class ProductsFragment extends Fragment {
     private ProgressBar progressBar;
     private ProductAdapter productAdapter;
     private ProductsApiAdapter adapter;
-    private Toolbar mActionBarToolbar;
 
     @Nullable
     @Override
@@ -52,7 +51,7 @@ public class ProductsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_products, container, false);
 
         //Initializing the toolbar
-        mActionBarToolbar = v.findViewById(R.id.toolbar);
+        Toolbar mActionBarToolbar = v.findViewById(R.id.toolbar);
         mActionBarToolbar.setTitle("Products");
 
 
@@ -76,8 +75,7 @@ public class ProductsFragment extends Fragment {
                 if (!response.isSuccessful()) {
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Could not get products", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     progressBar.setVisibility(View.INVISIBLE);
                     List<Product> products = response.body();
 
@@ -91,16 +89,18 @@ public class ProductsFragment extends Fragment {
                         @Override
                         public void onItemClick(int position) {
                             products.get(position);
-                           Intent intent = new Intent(getContext(), ProductDetailsActivity.class);
+                            Intent intent = new Intent(getContext(), ProductDetailsActivity.class);
                             intent.putExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID, products.get(position).get_id());
                             intent.putExtra("product_name", products.get(position).getName());
                             intent.putExtra("product_price", products.get(position).getPrice());
+                            intent.putExtra("product_description", products.get(position).getDescription());
                             intent.putExtra("product_category", products.get(position).getProductCategory());
+                            intent.putExtra("product_image", products.get(position).getProductImage());
                             intent.putExtra("ownerId", products.get(position).getOwnerId());
-                           startActivity(intent);
+                            Toast.makeText(getContext(), products.get(position).getOwnerId(), Toast.LENGTH_SHORT).show();
+                            startActivity(intent);
                         }
                     });
-
                 }
             }
 

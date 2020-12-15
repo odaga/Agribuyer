@@ -18,10 +18,10 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     //Adapter variables
-    private List<CartProduct> cartProductList;
+    private List<Product> cartProductList;
     private OnItemClickListener mListener;
 
-    public CartAdapter(List<CartProduct> cartProductList, OnItemClickListener mListener) {
+    public CartAdapter(List<Product> cartProductList, OnItemClickListener mListener) {
         this.cartProductList = cartProductList;
         this.mListener = mListener;
     }
@@ -29,11 +29,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
-    public void setOnClickListener (OnItemClickListener listener) {
+
+    public void setOnClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
 
-    public CartAdapter(List<CartProduct> cartProductList) {
+    public CartAdapter(List<Product> cartProductList) {
         this.cartProductList = cartProductList;
     }
 
@@ -73,12 +74,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        CartProduct cartItem = cartProductList.get(position);
+        Product cartItem = cartProductList.get(position);
         //setting up the thousand number format for prices
         DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 
         holder.productName.setText(cartItem.getName());
-        holder.productPrice.setText("UGX "+decimalFormat.format(Integer.parseInt(cartItem.getPrice())));
+        holder.productPrice.setText("UGX" +cartItem.getPrice());
+       // holder.productPrice.setText("UGX " + cartItem.getPrice());
 
     }
 

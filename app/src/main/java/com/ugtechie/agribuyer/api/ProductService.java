@@ -20,17 +20,19 @@ public interface ProductService {
     Call<Product> getSingleProduct(@Path("id") String productId);
 
     @GET("cart/{id}")
-    Call<List<CartProduct>> getCartItems(@Path("id") String FirebaseUserId);
+    Call<List<Product>> getCartItems(@Path("id") String FirebaseUserId);
 
     //Add product order
-    @POST("order/{id}")
-    Call<CartProduct> sendOrder(@Body CartProduct order);
+    @POST("orders/{id}")
+    Call<Product> sendOrder(@Body Product order);
 
-    @POST("cart/{id}")
-    Call<CartProduct> addToCart(@Body CartProduct cartItem);
+    //Option2
+    @POST("orders")
+    Call<List<Product>> sendOrderList(@Body List<Product> products);
 
-
-
+    //Add product to buyer's cart
+    @POST("cart/")
+    Call<Product> addToCart(@Body Product cartItem);
 
 
 }
