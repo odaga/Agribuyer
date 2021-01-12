@@ -64,7 +64,7 @@ public class CartFragment extends Fragment {
         //SHOW PROGRESSBAR BEFORE PRODUCTS ARE LOADED
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lit-earth-63598.herokuapp.com/")
+                .baseUrl("https://amis-1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
@@ -114,7 +114,7 @@ public class CartFragment extends Fragment {
         cartProgressBar.setVisibility(View.VISIBLE);
         //Setting up Retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lit-earth-63598.herokuapp.com/")
+                .baseUrl("https://amis-1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);

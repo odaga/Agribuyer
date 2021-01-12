@@ -33,7 +33,7 @@
             <com.elyeproj.loaderviewlibrary.LoaderImageView
                 android:id="@+id/product_details_image"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="200dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:scaleType="centerCrop" />
@@ -137,6 +137,73 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.elyeproj.loaderviewlibrary.LoaderTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="Quantity"
+                        android:textColor="@android:color/black"
+                        android:textSize="25sp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+
+                        <Button
+                            android:id="@+id/decrease_quantity"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@color/colorPrimary"
+                            android:clickable="true"
+                            android:text="-"
+                            android:textColor="@android:color/white"
+                            android:textSize="25dp" />
+
+                        <TextView
+                            android:id="@+id/cart_item_quantity"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textSize="40dp" />
+
+                        <Button
+                            android:id="@+id/increase_quantity"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="20dp"
+                            android:background="@color/colorPrimary"
+                            android:clickable="true"
+                            android:text="+"
+                            android:textColor="@android:color/white"
+                            android:textSize="25dp" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
 
             <Button
                 android:id="@+id/add_to_cart_button"

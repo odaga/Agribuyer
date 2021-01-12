@@ -68,7 +68,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mAuth.signOut();
-                startActivity(new Intent(getActivity(), MainActivity.class));
+                startActivity(new Intent(getActivity(), LoginActivity.class));
                 getActivity().finish();
             }
         });

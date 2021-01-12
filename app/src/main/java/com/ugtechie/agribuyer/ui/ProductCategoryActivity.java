@@ -63,7 +63,7 @@ public class ProductCategoryActivity extends AppCompatActivity {
         productCategoryProgressBar.setVisibility(View.VISIBLE);
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
+                .baseUrl("com.squareup.retrofit2:retrofit:2.9.0/") //Add the base url for the api
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);

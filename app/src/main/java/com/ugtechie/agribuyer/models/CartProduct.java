@@ -3,21 +3,21 @@ package com.ugtechie.agribuyer.models;
 public class CartProduct {
 
     private String _id;
+    private String productId;
     private String name;
+    private String description;
     private String price;
     private String productCategory;
-    private String quantity;
+    private int quantity;
     private String ownerId;
     private String buyerId;
 
 
-    public CartProduct() {
-        //Needed by firebase to Sterialise data
-    }
-
-    public CartProduct(String _id, String name, String price, String productCategory, String quantity, String ownerId, String buyerId) {
+    public CartProduct(String _id, String productId, String name, String description, String price, String productCategory, int quantity, String ownerId, String buyerId) {
         this._id = _id;
+        this.productId = productId;
         this.name = name;
+        this.description = description;
         this.price = price;
         this.productCategory = productCategory;
         this.quantity = quantity;
@@ -29,8 +29,12 @@ public class CartProduct {
         return _id;
     }
 
-    public void set_id(String _id) {
-        this._id = _id;
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -57,11 +61,11 @@ public class CartProduct {
         this.productCategory = productCategory;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -79,5 +83,13 @@ public class CartProduct {
 
     public void setBuyerId(String buyerId) {
         this.buyerId = buyerId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private String userId;
     private String userDocumentId;
+    private TextView loginLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,14 @@ public class SignUpActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.edit_text_register_email);
         editTextPhoneNumber = findViewById(R.id.edit_text_register_phone_number);
         editTextPassword = findViewById(R.id.edit_text_register_password);
+        loginLink = findViewById(R.id.text_view_login);
+
+        loginLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            }
+        });
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +171,7 @@ public class SignUpActivity extends AppCompatActivity {
         );
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://lit-earth-63598.herokuapp.com/") //Add the base url for the api
+                .baseUrl("https://amis-1.herokuapp.com/") //Add the base url for the api
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserService userService = retrofit.create(UserService.class);

@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editTextEmail;
     private EditText editTextPassword;
+    private TextView signUpLink;
     private Button buttonLogin;
 
     private FirebaseAuth mAuth;
@@ -38,6 +40,14 @@ public class LoginActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
         buttonLogin = findViewById(R.id.button_login);
+        signUpLink = findViewById(R.id.text_view_SignUp_link);
+
+        signUpLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override

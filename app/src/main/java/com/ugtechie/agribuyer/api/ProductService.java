@@ -19,8 +19,12 @@ public interface ProductService {
     @GET("products/{id}")
     Call<Product> getSingleProduct(@Path("id") String productId);
 
+    //Add product to buyer's cart
+    @POST("cart")
+    Call<CartProduct> addToCart(@Body CartProduct cartItem);
+
     @GET("cart/{id}")
-    Call<List<Product>> getCartItems(@Path("id") String FirebaseUserId);
+    Call<List<CartProduct>> getCartItems(@Path("id") String FirebaseUserId);
 
     //Add product order
     @POST("orders/{id}")
@@ -29,10 +33,5 @@ public interface ProductService {
     //Option2
     @POST("orders")
     Call<List<Product>> sendOrderList(@Body List<Product> products);
-
-    //Add product to buyer's cart
-    @POST("cart/")
-    Call<Product> addToCart(@Body Product cartItem);
-
 
 }

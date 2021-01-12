@@ -74,6 +74,25 @@
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
                 android:textColor="@android:color/white" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:id="@+id/text_view_SignUp_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="50dp"
+                    android:clickable="true"
+                    android:text=" Don't have an Account? Sign Up here"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
+            </RelativeLayout>
+
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

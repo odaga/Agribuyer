@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
         CardView cardViewCat1 = v.findViewById(R.id.card_view_category_one);
         CardView cardViewCat2 = v.findViewById(R.id.card_view_category_two);
         CardView cardViewCat3 = v.findViewById(R.id.card_view_category_three);
+        CardView cardViewCat4 = v.findViewById(R.id.product_category_four_image);
         final TextView cat1Text = v.findViewById(R.id.cat1_text);
         LoaderImageView homeBannerImage = v.findViewById(R.id.home_banner_image);
         LoaderImageView categoryOneImage = v.findViewById(R.id.product_category_one_image);
@@ -57,7 +58,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "Coffee Products");
+                intent.putExtra("product_category", "Fruits");
                 startActivity(intent);
             }
         });
@@ -66,7 +67,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "Coffee Products");
+                intent.putExtra("product_category", "Fruits");
                 startActivity(intent);
 
             }
@@ -76,7 +77,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "Maize Products");
+                intent.putExtra("product_category", "Vegetables");
                 startActivity(intent);
             }
         });
@@ -85,7 +86,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "Irish Potatoes");
+                intent.putExtra("product_category", "cereals");
+                startActivity(intent);
+            }
+        });
+
+        cardViewCat4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
+                intent.putExtra("product_category", "Food");
                 startActivity(intent);
             }
         });
