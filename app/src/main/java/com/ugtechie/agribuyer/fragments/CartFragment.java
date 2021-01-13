@@ -2,6 +2,7 @@ package com.ugtechie.agribuyer.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,25 +63,31 @@ public class CartFragment extends Fragment {
 
         //SHOW PROGRESSBAR BEFORE PRODUCTS ARE LOADED
         //SETTING UP RETROFIT
+        /*
+         * Get products current users products from remote data source
+         * */
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://amis-1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
-        Call<List<Product>> call = productService.getCartItems(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Call<List<CartProduct>> call = productService.getCartItems(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        call.enqueue(new Callback<List<Product>>() {
+
+        call.enqueue(new Callback<List<CartProduct>>() {
             @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+            public void onResponse(Call<List<CartProduct>> call, Response<List<CartProduct>> response) {
                 if (!response.isSuccessful()) {
                     cartProgressBar.setVisibility(View.INVISIBLE);
-                    cartEmpty.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(), "Could not get items code: " + response.code(), Toast.LENGTH_LONG).show();
+                    if (response.code() == 404) {
+                        cartEmpty.setVisibility(View.VISIBLE);
+                    }
+                    //Toast.makeText(getContext(), "Could not get items code: " + response.code(), Toast.LENGTH_LONG).show();
 
                 } else {
 
-                    List<Product> CartItems = response.body();
-                    Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                    List<CartProduct> CartItems = response.body();
+                    //Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
 
                     //Setting up recyclerview
                     cartRecyclerView = v.findViewById(R.id.cart_recyclerview);
@@ -97,12 +103,11 @@ public class CartFragment extends Fragment {
                             sendProductOrders(CartItems);
                         }
                     });
-
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
+            public void onFailure(Call<List<CartProduct>> call, Throwable t) {
                 // progressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), "Could not get cart items", Toast.LENGTH_SHORT).show();
             }
@@ -110,7 +115,10 @@ public class CartFragment extends Fragment {
         return v;
     }
 
-    private void sendProductOrders(List<Product> cartItems) {
+    /*
+     *   send current user cart items to seller as orders
+     * */
+    private void sendProductOrders(List<CartProduct> cartItems) {
         cartProgressBar.setVisibility(View.VISIBLE);
         //Setting up Retrofit
         Retrofit retrofit = new Retrofit.Builder()
@@ -118,15 +126,17 @@ public class CartFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
-        Call<List<Product>> call = productService.sendOrderList(cartItems);
+        Call<List<CartProduct>> call = productService.sendOrderList(cartItems);
 
-        call.enqueue(new Callback<List<Product>>() {
+        call.enqueue(new Callback<List<CartProduct>>() {
             @Override
-            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+            public void onResponse(Call<List<CartProduct>> call, Response<List<CartProduct>> response) {
                 if (!response.isSuccessful()) {
                     cartProgressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Checkout Failed with code: " + response.code(), Toast.LENGTH_SHORT).show();
                 } else {
+                    clearCurrentUserCartItems();
+                    cartProgressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(getContext(), "Checkout complete", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), HomeActivity.class);
                     startActivity(intent);
@@ -134,12 +144,38 @@ public class CartFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Product>> call, Throwable t) {
+            public void onFailure(Call<List<CartProduct>> call, Throwable t) {
                 cartProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), "Connection Error", Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
 
+    private void clearCurrentUserCartItems () {
+        //Setting up Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://amis-1.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ProductService productService = retrofit.create(ProductService.class);
+        Call<Void> call = productService.clearCart(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Clearing cart failed", Toast.LENGTH_SHORT).show();
+                }
+                else
+
+                    Toast.makeText(getContext(), "Cart Cleared", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

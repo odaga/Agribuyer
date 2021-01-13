@@ -36,7 +36,7 @@ public class HomeFragment extends Fragment {
         CardView cardViewCat1 = v.findViewById(R.id.card_view_category_one);
         CardView cardViewCat2 = v.findViewById(R.id.card_view_category_two);
         CardView cardViewCat3 = v.findViewById(R.id.card_view_category_three);
-        CardView cardViewCat4 = v.findViewById(R.id.product_category_four_image);
+        CardView cardViewCat4 = v.findViewById(R.id.card_view_category_four);
         final TextView cat1Text = v.findViewById(R.id.cat1_text);
         LoaderImageView homeBannerImage = v.findViewById(R.id.home_banner_image);
         LoaderImageView categoryOneImage = v.findViewById(R.id.product_category_one_image);
@@ -63,15 +63,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        cardViewCat1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "Fruits");
-                startActivity(intent);
-
-            }
-        });
 
         cardViewCat2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,4 +98,6 @@ public class HomeFragment extends Fragment {
     private void updateUserInfo() {
         //show user profile information like username and profile picture
     }
+
+
 }

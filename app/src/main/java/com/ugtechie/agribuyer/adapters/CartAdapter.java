@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
+import com.elyeproj.loaderviewlibrary.LoaderTextView;
 import com.ugtechie.agribuyer.R;
 import com.ugtechie.agribuyer.models.CartProduct;
 import com.ugtechie.agribuyer.models.Product;
@@ -18,10 +19,10 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     //Adapter variables
-    private List<Product> cartProductList;
+    private List<CartProduct> cartProductList;
     private OnItemClickListener mListener;
 
-    public CartAdapter(List<Product> cartProductList, OnItemClickListener mListener) {
+    public CartAdapter(List<CartProduct> cartProductList, OnItemClickListener mListener) {
         this.cartProductList = cartProductList;
         this.mListener = mListener;
     }
@@ -34,13 +35,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         mListener = listener;
     }
 
-    public CartAdapter(List<Product> cartProductList) {
+    public CartAdapter(List<CartProduct> cartProductList) {
         this.cartProductList = cartProductList;
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         TextView productName;
         TextView productPrice;
+        LoaderTextView productQuantity;
         LoaderImageView productImage;
 
         public CartViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
@@ -48,6 +50,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             productName = itemView.findViewById(R.id.cart_product_name);
             productPrice = itemView.findViewById(R.id.cart_product_price);
             productImage = itemView.findViewById(R.id.cart_product_image);
+            productQuantity = itemView.findViewById(R.id.cart_product_quantity);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,12 +78,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-        Product cartItem = cartProductList.get(position);
+        CartProduct cartItem = cartProductList.get(position);
         //setting up the thousand number format for prices
-        DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+        //DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 
         holder.productName.setText(cartItem.getName());
         holder.productPrice.setText("UGX" +cartItem.getPrice());
+        holder.productQuantity.setText(String.valueOf(cartItem.getQuantity()));
        // holder.productPrice.setText("UGX " + cartItem.getPrice());
 
     }

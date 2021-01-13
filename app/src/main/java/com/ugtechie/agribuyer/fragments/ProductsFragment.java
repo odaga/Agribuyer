@@ -91,13 +91,15 @@ public class ProductsFragment extends Fragment {
                             products.get(position);
                             Intent intent = new Intent(getContext(), ProductDetailsActivity.class);
                             intent.putExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID, products.get(position).get_id());
+                            intent.putExtra("product_id", products.get(position).get_id());
                             intent.putExtra("product_name", products.get(position).getName());
                             intent.putExtra("product_price", products.get(position).getPrice());
                             intent.putExtra("product_description", products.get(position).getDescription());
                             intent.putExtra("product_category", products.get(position).getProductCategory());
                             intent.putExtra("product_image", products.get(position).getProductImage());
                             intent.putExtra("ownerId", products.get(position).getOwnerId());
-                            Toast.makeText(getContext(), products.get(position).getOwnerId(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getContext(), products.get(position).getOwnerId(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), products.get(position).get_id(), Toast.LENGTH_SHORT).show();
                             startActivity(intent);
                         }
                     });

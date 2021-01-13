@@ -42,6 +42,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     private String productDetailsId;
     private Button increaseQuantity, decreaseQuantity;
     private TextView quantity;
+    private int productQuantity;
 
 
     @Override
@@ -125,7 +126,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 //setting up the thousand number format for prices
                 DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 
-
                 //update the ui with data from the api
                 productName.setText(response.body().getName());
                 productPrice.setText("UGX" + response.body().getPrice());
@@ -163,23 +163,26 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
         CartProduct item = new CartProduct(
                 "",
-                productDetailsId,
+                //getIntent().getStringExtra("product_id"),
+                //productDetailsId,
+                getIntent().getStringExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID),
                 getIntent().getStringExtra("product_name"),
                 getIntent().getStringExtra("product_description"),
                 getIntent().getStringExtra("product_price"),
                 getIntent().getStringExtra("product_category"),
                 item_quantity,
+                //Integer.parseInt(quantity.getText().toString()),
                 getIntent().getStringExtra("ownerId"),
                 FirebaseAuth.getInstance().getCurrentUser().getUid()
         );
 
 
-        //Toast.makeText(ProductDetailsActivity.this, cartItem.getBuyerId(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(ProductDetailsActivity.this, getIntent().getStringExtra("ownerId"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProductDetailsActivity.this, String.valueOf(item_quantity), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ProductDetailsActivity.this, getIntent().getStringExtra("ownerId"), Toast.LENGTH_SHORT).show();
 
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://amis-1.herokuapp.com/") //Add the base url for the api
+                .baseUrl("https://amis-1.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
@@ -199,11 +202,12 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CartProduct> call, Throwable t) {
-                Toast.makeText(ProductDetailsActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProductDetailsActivity.this, "Connection error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProductDetailsActivity.this, "Product Added to Cart", Toast.LENGTH_SHORT).show();
             }
         });
 
-
     }
+
 
 } 

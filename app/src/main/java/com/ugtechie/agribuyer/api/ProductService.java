@@ -16,22 +16,34 @@ public interface ProductService {
     @GET("products")
     Call<List<Product>> getProducts();
 
+    //Get one product category
+    @GET("products/category/{id}")
+    Call<List<Product>> getProductCategory(@Path("id") String categoryId);
+
+    //Fetch single product details
     @GET("products/{id}")
     Call<Product> getSingleProduct(@Path("id") String productId);
+
+    //Get current user cart items
+    @GET("cart/{id}")
+    Call<List<CartProduct>> getCartItems(@Path("id") String FirebaseUserId);
 
     //Add product to buyer's cart
     @POST("cart")
     Call<CartProduct> addToCart(@Body CartProduct cartItem);
 
-    @GET("cart/{id}")
-    Call<List<CartProduct>> getCartItems(@Path("id") String FirebaseUserId);
-
-    //Add product order
+    //Option 1
+    //Add product order (Failed)
     @POST("orders/{id}")
     Call<Product> sendOrder(@Body Product order);
 
-    //Option2
+    //Option2 (Worked)
     @POST("orders")
-    Call<List<Product>> sendOrderList(@Body List<Product> products);
+    Call<List<CartProduct>> sendOrderList(@Body List<CartProduct> products);
+
+    //Clear the cuurrent user cart after checkout
+    @GET("/cart/clear/{id}")
+    Call<Void> clearCart(@Path("id") String FirebaseUserId);
+
 
 }
