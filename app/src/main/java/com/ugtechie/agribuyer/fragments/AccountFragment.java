@@ -2,10 +2,12 @@ package com.ugtechie.agribuyer.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,11 +30,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.ugtechie.agribuyer.R;
+import com.ugtechie.agribuyer.api.ProductService;
+import com.ugtechie.agribuyer.api.UserService;
+import com.ugtechie.agribuyer.models.Product;
+import com.ugtechie.agribuyer.models.User;
 import com.ugtechie.agribuyer.ui.LoginActivity;
 import com.ugtechie.agribuyer.ui.MainActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AccountFragment extends Fragment {
     private static final String TAG = "AccountFragment";
@@ -64,6 +75,9 @@ public class AccountFragment extends Fragment {
         emailField = v.findViewById(R.id.email_field);
         phoneField = v.findViewById(R.id.phone_field);
 
+        //Populate use data fields
+        retrieveUseInfo();
+
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,35 +86,52 @@ public class AccountFragment extends Fragment {
                 getActivity().finish();
             }
         });
-       // nameField.setText(mAuth.getCurrentUser().getDisplayName());
-       // phoneField.setText(mAuth.getCurrentUser().getPhoneNumber());
-       // emailField.setText(mAuth.getCurrentUser().getEmail());
+        // nameField.setText(mAuth.getCurrentUser().getDisplayName());
+        // phoneField.setText(mAuth.getCurrentUser().getPhoneNumber());
+        // emailField.setText(mAuth.getCurrentUser().getEmail());
 
         //Populate use data fields
-         retrieveUseInfo();
+        //retrieveUseInfo();
 
         return v;
     }
 
     private void retrieveUseInfo() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference userInfoRef = db.collection("users");
+        //SETTING UP RETROFIT
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://amis-1.herokuapp.com/") //Add the base url for the api
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        UserService userService = retrofit.create(UserService.class);
+        Call<User> call = userService.getUser(mAuth.getInstance().getCurrentUser().getUid());
 
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: Failed to get user Information with code: " + response.code());
+                } else {
+                    if (response.code() == 404) {
+                        Log.d(TAG, "onResponse: No user with provided userId was found");
+                    }
+                    else {
+                        // nameField.setText(mAuth.getCurrentUser().getDisplayName());
+                        // phoneField.setText(mAuth.getCurrentUser().getPhoneNumber());
+                        // emailField.setText(mAuth.getCurrentUser().getEmail());
 
-       /*
-        userInfoRef.whereEqualTo("userId", mAuth.getCurrentUser().getUid()).get()
-               .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                   @Override
-                   public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                       DocumentSnapshot document = (DocumentSnapshot) queryDocumentSnapshots.getDocuments();
-                       nameField.setText(document.getString("firstName") +" "+ document.getString("lastName"));
-                       emailField.setText(document.getString("email"));
-                       phoneField.setText(document.getString("phoneNumber"));
+                        nameField.setText(response.body().getFirstName() + " " + response.body().getLastName());
+                        phoneField.setText(response.body().getPhoneNumber());
+                        emailField.setText(response.body().getEmail());
+                    }
+                }
+            }
 
-                   }
-               });
-       */
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
 
+            }
+        });
     }
 
 

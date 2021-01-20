@@ -98,8 +98,7 @@ public class ProductsFragment extends Fragment {
                             intent.putExtra("product_category", products.get(position).getProductCategory());
                             intent.putExtra("product_image", products.get(position).getProductImage());
                             intent.putExtra("ownerId", products.get(position).getOwnerId());
-                            //Toast.makeText(getContext(), products.get(position).getOwnerId(), Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getContext(), products.get(position).get_id(), Toast.LENGTH_SHORT).show();
+                            intent.putExtra("pId", products.get(position).get_id());
                             startActivity(intent);
                         }
                     });

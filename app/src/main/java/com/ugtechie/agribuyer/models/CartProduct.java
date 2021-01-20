@@ -8,18 +8,20 @@ public class CartProduct {
     private String description;
     private String price;
     private String productCategory;
+    private String productImage;
     private int quantity;
     private String ownerId;
     private String buyerId;
 
 
-    public CartProduct(String _id, String productId, String name, String description, String price, String productCategory, int quantity, String ownerId, String buyerId) {
+    public CartProduct(String _id, String productId, String name, String description, String price, String productCategory, String productImage, int quantity, String ownerId, String buyerId) {
         this._id = _id;
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.price = price;
         this.productCategory = productCategory;
+        this.productImage = productImage;
         this.quantity = quantity;
         this.ownerId = ownerId;
         this.buyerId = buyerId;
@@ -67,6 +69,14 @@ public class CartProduct {
 
     public void setProductCategory(String productCategory) {
         this.productCategory = productCategory;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
     }
 
     public int getQuantity() {

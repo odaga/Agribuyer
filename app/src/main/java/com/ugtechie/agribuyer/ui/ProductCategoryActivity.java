@@ -125,6 +125,7 @@ public class ProductCategoryActivity extends AppCompatActivity {
                 productList.get(position);
                 Intent intent = new Intent(ProductCategoryActivity.this, ProductDetailsActivity.class);
                 intent.putExtra("SINGLE_PRODUCT_RECYCLERVIEW_ID", productList.get(position).get_id());
+                //Toast.makeText(ProductCategoryActivity.this, productList.get(position).get_id(), Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });

@@ -45,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
+                    return;
                 }
             }
-        }, 4000);
+        }, 2000);
     }
 
     @Override

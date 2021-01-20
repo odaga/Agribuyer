@@ -42,12 +42,14 @@ public class HomeFragment extends Fragment {
         LoaderImageView categoryOneImage = v.findViewById(R.id.product_category_one_image);
         LoaderImageView categoryTwoImage = v.findViewById(R.id.product_category_two_image);
         LoaderImageView categoryThreeImage = v.findViewById(R.id.product_category_three_image);
+        LoaderImageView categoryFourImage = v.findViewById(R.id.product_category_four_image);
 
         //load home activity images
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffresh%20vegetables.jpg?alt=media&token=243ced8c-c209-4096-8c27-e11360cef8b7")).into(homeBannerImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fuganda-coffe-plantation.jpg?alt=media&token=b934b5d5-5100-4ff0-8f94-b8afbfabdf5b")).into(categoryOneImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fpng-maize.png?alt=media&token=9dfef1b1-3a3b-4c16-a7b3-a960074debba")).into(categoryTwoImage);
-        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fpotatoes.webp?alt=media&token=386b7040-a0d1-47b3-bf0c-33ba1cb96e32")).into(categoryThreeImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fbuyer_header_image.jpg?alt=media&token=3c197e7d-8e6e-4935-a7cf-3fc191cc5ba4")).into(homeBannerImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Ffruit.jpg?alt=media&token=a8be48f2-0733-4525-845b-3b78677c1e13")).into(categoryOneImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fvegetables.jpg?alt=media&token=874ea41c-a743-4038-83df-fe349bafb90e")).into(categoryTwoImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fcereals.webp?alt=media&token=81ddc7d4-05b1-4447-9e45-274ca0a52ca5")).into(categoryThreeImage);
+        Picasso.get().load(Uri.parse("https://firebasestorage.googleapis.com/v0/b/agri-products-eec4b.appspot.com/o/home_Activity_Banner_Imagines%2Fmatooke.jpg?alt=media&token=0ae58458-3e33-41f0-9ef4-2576e4bfd5e1")).into(categoryFourImage);
 
 
         //Update user info on the home fragment
@@ -77,7 +79,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ProductCategoryActivity.class);
-                intent.putExtra("product_category", "cereals");
+                intent.putExtra("product_category", "Cereals");
                 startActivity(intent);
             }
         });

@@ -45,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText editTextPhoneNumber;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private String userId;
+    private String firebaseUserId;
     private String userDocumentId;
     private TextView loginLink;
 
@@ -124,21 +124,58 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                             progressDialog.dismiss();
+                            progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 //Sign in success
-                                Log.d(TAG, "onComplete: createUSerWith Email successful");
+                                Log.d(TAG, "onComplete: created USer With Email successful");
                                 FirebaseUser user = task.getResult().getUser();
-                                userId = mAuth.getCurrentUser().getUid();
+                                String firebaseUserId = task.getResult().getUser().getUid();
+
+                                Toast.makeText(SignUpActivity.this, firebaseUserId, Toast.LENGTH_SHORT).show();
 
                                 //Add profile data to FireStore users collection
-                                CreateUserProfile(userId, firstName, lastName, email, phoneNumber);
+                                //CreateUserProfile(firebaseUserId, firstName, lastName, email, phoneNumber);
+
+
+                                //Get an instance of the user object
+                                User newUser = new User(
+                                        firebaseUserId,
+                                        firstName,
+                                        lastName,
+                                        email,
+                                        phoneNumber
+                                        //To be added after an profile image is uploaded and url is retrieved
+                                );
+                                //SETTING UP RETROFIT
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl("https://amis-1.herokuapp.com/") //Add the base url for the api
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+                                UserService userService = retrofit.create(UserService.class);
+
+                                Call<User> call = userService.saveProfile(newUser);
+
+                                call.enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
+                                        if (!response.isSuccessful())
+                                            Log.d(TAG, "onResponse: failed to save profile");
+                                        //Go to home activity
+                                        startHomeActivity();
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
+                                        Log.d(TAG, "onFailure: saving buyer profile failed");
+                                        Toast.makeText(SignUpActivity.this, "saving buyer profile failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
 
                                 //Go to home activity
-                                startHomeActivity();
+                                //startHomeActivity();
                             } else {
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(SignUpActivity.this, "Creating Account failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUpActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
 
                             }
                         }
@@ -155,19 +192,21 @@ public class SignUpActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
+            return;
         }
     }
 
     //Save user data to firebase fireStore users collection
-    private void CreateUserProfile(String userId, String firstName, String lastName, String email, String phoneNumber) {
+    private void CreateUserProfile(String firebaseUserId, String firstName, String lastName, String email, String phoneNumber) {
+        /*
         //Get an instance of the user object
         User newUser = new User(
-                userId,
+                firebaseUserId,
                 firstName,
                 lastName,
                 email,
-                phoneNumber,
-                ""  //To be added after an profile image is uploaded and url is retrieved
+                phoneNumber
+                //To be added after an profile image is uploaded and url is retrieved
         );
         //SETTING UP RETROFIT
         Retrofit retrofit = new Retrofit.Builder()
@@ -193,6 +232,7 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "saving buyer profile failed", Toast.LENGTH_SHORT).show();
             }
         });
+        */
     }
 
 

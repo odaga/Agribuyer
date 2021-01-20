@@ -67,6 +67,9 @@ public class ProductDetailsActivity extends AppCompatActivity {
         decreaseQuantity = findViewById(R.id.decrease_quantity);
         quantity = findViewById(R.id.cart_item_quantity);
 
+
+        //getProduct(productDetailsId);
+
         increaseQuantity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,8 +103,27 @@ public class ProductDetailsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         //Getting data from the intent sent from the product category activity
         Intent intent = getIntent();
-        String productDetailsId = intent.getStringExtra(SINGLE_PRODUCT_RECYCLERVIEW_ID);
-        getProduct(productDetailsId);
+        String productDetailsId = intent.getStringExtra("SINGLE_PRODUCT_RECYCLERVIEW_ID");
+        String pId = intent.getStringExtra("pId");
+        //Toast.makeText(this, productDetailsId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, pId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, pId, Toast.LENGTH_SHORT).show();
+        //getProduct(productDetailsId);
+
+
+        try {
+            /*
+            if (!pId.isEmpty()) {
+                getProduct(pId);
+            } else {
+                getProduct(productDetailsId);
+            }
+            */
+            getProduct(productDetailsId);
+            getProduct(pId);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -113,6 +135,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ProductService productService = retrofit.create(ProductService.class);
+        //Call<Product> call = productService.getSingleProduct(productDetailsId);
         Call<Product> call = productService.getSingleProduct(productDetailsId);
 
         call.enqueue(new Callback<Product>() {
@@ -170,14 +193,15 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 getIntent().getStringExtra("product_description"),
                 getIntent().getStringExtra("product_price"),
                 getIntent().getStringExtra("product_category"),
-                item_quantity,
+                getIntent().getStringExtra("product_image"),
+        item_quantity,
                 //Integer.parseInt(quantity.getText().toString()),
                 getIntent().getStringExtra("ownerId"),
                 FirebaseAuth.getInstance().getCurrentUser().getUid()
         );
 
 
-        Toast.makeText(ProductDetailsActivity.this, String.valueOf(item_quantity), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ProductDetailsActivity.this, String.valueOf(item_quantity), Toast.LENGTH_SHORT).show();
         //Toast.makeText(ProductDetailsActivity.this, getIntent().getStringExtra("ownerId"), Toast.LENGTH_SHORT).show();
 
         //SETTING UP RETROFIT

@@ -1,27 +1,27 @@
 package com.ugtechie.agribuyer.models;
 
 public class User {
-    private String userId, firstName, lastName, email, phoneNumber, profileImageUrl;
+    //private String userId;
+    private String firebaseUserId;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
 
-    public User() {
-        //Needed by Firebase to sterilize data
-    }
-
-    public User(String userId, String firstName, String lastName, String email, String phoneNumber, String profileImageUrl) {
-        this.userId = userId;
+    public User(String firebaseUserId, String firstName, String lastName, String email, String phoneNumber) {
+        this.firebaseUserId = firebaseUserId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.profileImageUrl = profileImageUrl;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getFirebaseUserId() {
+        return firebaseUserId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setFirebaseUserId(String firebaseUserId) {
+        this.firebaseUserId = firebaseUserId;
     }
 
     public String getFirstName() {
@@ -54,13 +54,5 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
     }
 }

@@ -13,6 +13,6 @@ public interface UserService {
     @GET("buyer/{id}")
     Call<User> getUser(@Path("id") String userId);
 
-    @POST("buyer")
+    @POST("buyer/register")
     Call<User> saveProfile(@Body User user);
 }
