@@ -3,11 +3,13 @@ package com.ugtechie.agribuyer.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +17,22 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.elyeproj.loaderviewlibrary.LoaderImageView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.ugtechie.agribuyer.R;
+import com.ugtechie.agribuyer.api.ProductService;
+import com.ugtechie.agribuyer.api.UserService;
+import com.ugtechie.agribuyer.models.User;
 import com.ugtechie.agribuyer.ui.ProductCategoryActivity;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.content.ContentValues.TAG;
 
 public class HomeFragment extends Fragment {
 
@@ -98,7 +113,32 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateUserInfo() {
-        //show user profile information like username and profile picture
+        //Call the product from the api
+        //SETTING UP RETROFIT
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://amis-1.herokuapp.com/") //Add the base url for the api
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        // ProductService productService = retrofit.create(ProductService.class);
+        UserService userService = retrofit.create(UserService.class);
+        Call<User> call = userService.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Failed with code:" + response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    textViewHomeUserName.setText("Hi, " + response.body().getFirstName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                //Toast.makeText(getContext(), "Connection error", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: Connection error");
+            }
+        });
     }
 
 

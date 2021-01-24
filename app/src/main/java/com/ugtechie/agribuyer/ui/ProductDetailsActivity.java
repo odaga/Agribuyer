@@ -107,7 +107,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
         String pId = intent.getStringExtra("pId");
         //Toast.makeText(this, productDetailsId, Toast.LENGTH_SHORT).show();
         //Toast.makeText(this, pId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, pId, Toast.LENGTH_SHORT).show();
         //getProduct(productDetailsId);
 
 
@@ -164,7 +163,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Product> call, Throwable t) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(ProductDetailsActivity.this, "Failed to fetch product details", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProductDetailsActivity.this, "Failed to fetch product details", Toast.LENGTH_SHORT).show();
             }
         });
     }

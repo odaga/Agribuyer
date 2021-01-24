@@ -11,7 +11,7 @@ import retrofit2.http.Path;
 
 public interface UserService {
     @GET("buyer/{id}")
-    Call<User> getUser(@Path("id") String userId);
+    Call<User> getUser(@Path("id") String fiebaseUserId);
 
     @POST("buyer/register")
     Call<User> saveProfile(@Body User user);

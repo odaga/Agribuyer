@@ -103,7 +103,8 @@ public class AccountFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserService userService = retrofit.create(UserService.class);
-        Call<User> call = userService.getUser(mAuth.getInstance().getCurrentUser().getUid());
+        //Call<User> call = userService.getUser(mAuth.getInstance().getCurrentUser().getUid());
+        Call<User> call = userService.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -113,8 +114,7 @@ public class AccountFragment extends Fragment {
                 } else {
                     if (response.code() == 404) {
                         Log.d(TAG, "onResponse: No user with provided userId was found");
-                    }
-                    else {
+                    } else {
                         // nameField.setText(mAuth.getCurrentUser().getDisplayName());
                         // phoneField.setText(mAuth.getCurrentUser().getPhoneNumber());
                         // emailField.setText(mAuth.getCurrentUser().getEmail());
